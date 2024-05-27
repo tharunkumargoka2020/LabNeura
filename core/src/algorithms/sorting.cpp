@@ -1,5 +1,6 @@
 #include "algorithms/sorting.h"
 #include <vector>
+#include <iostream>
 
 Sorting::Sorting(std::vector<int> a){
     data = a;
@@ -41,15 +42,25 @@ void Sorting::bubble(){
     }
 }
 void Sorting::merge(){
-    merge_sort(data, 0, n);
+    std::cout << "Before Sorting" << std::endl;
+    for (int i = 0; i<n; i++){
+        std::cout << data[i] << " "; 
+    }
+    std::cout<<std::endl;
+    merge_sort(data, 0, n-1);
+    std::cout << "After Sorting" << std::endl;
+    for (int i = 0; i<n; i++){
+        std::cout << data[i] << " "; 
+    }
+    std::cout<<std::endl;
 }
 
-void Sorting::merge_sort(std::vector<int>& data, int lower, int upper){
+void Sorting::merge_sort(std::vector<int>& dt, int lower, int upper){
     if (lower >= upper)
         return;
     int mid = lower + (upper-lower)/2;
-    merge_sort(data, lower, mid);
-    merge_sort(data, mid+1, upper);
+    merge_sort(dt, lower, mid);
+    merge_sort(dt, mid+1, upper);
     int n1 = mid - lower + 1;
     int n2 = upper - mid;
 
@@ -57,10 +68,10 @@ void Sorting::merge_sort(std::vector<int>& data, int lower, int upper){
     std::vector<int> right(n2);
 
     for (int i=0; i<n1; i++){
-        left[i] =(data[lower+i]);
+        left[i] =(dt[lower+i]);
     }
     for (int j=0; j<n2; j++){
-        right[j] = (data[mid+1+j]);
+        right[j] = (dt[mid+1+j]);
     }
 
     int i=0;
@@ -69,53 +80,58 @@ void Sorting::merge_sort(std::vector<int>& data, int lower, int upper){
 
     while (i<n1 && j<n2){
         if (left[i]<=right[j]){
-            data[k] = left[i];
+            dt[k] = left[i];
             k+=1;
             i+=1;
         }
         else{
-            data[k] = right[j];
+            dt[k] = right[j];
             k+=1;
             j+=1;
         }
     }
 
     while (i<n1){
-        data[k]=left[i];
+        dt[k]=left[i];
         k+=1;
         i+=1;
     }
 
     while (j<n2){
-        data[k] = right[j];
+        dt[k] = right[j];
         k+=1;
         j+=1;
     }
 }
 
 void Sorting::quick(){
-    quick_sort(data, 0, n);
+    std::cout << "Before Sorting" << std::endl;
+    for (int i = 0; i<n; i++){
+        std::cout << data[i] << " "; 
+    }
+    std::cout<<std::endl;
+    quick_sort(data, 0, n-1);
+    std::cout << "After Sorting" << std::endl;
+    for (int i = 0; i<n; i++){
+        std::cout << data[i] << " "; 
+    }
+    std::cout<<std::endl;
 }
 
 void Sorting::quick_sort(std::vector<int>& a, int lower, int upper){
     if (lower<upper){
-        int pi = partition(a, lower, upper);
-        quick_sort(a,lower, pi-1);
-        quick_sort(a, pi+1, upper);
-    }
-}
-
-int Sorting::partition(std::vector<int>& a, int lower, int upper){
-    int pivot = a[upper];
-    int i = lower-1;
-    for (int j=lower; j<=upper-1; j++){
-        if (a[j]<=pivot){
-            i = i+1;
-            std::swap(a[j],a[i]);
+        int pivot = a[upper];
+        int i = lower-1;
+        for (int j=lower; j<=upper-1; j++){
+            if (a[j]<=pivot){
+                i = i+1;
+                std::swap(a[j],a[i]);
+            }
         }
+        std::swap(a[i+1],a[upper]);
+        quick_sort(a,lower, i);
+        quick_sort(a, i+2, upper);
     }
-    std::swap(a[i+1],a[upper]);
-    return i+1;
 }
 
 void Sorting::setData(std::vector<int> a){

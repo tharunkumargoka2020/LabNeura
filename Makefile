@@ -51,7 +51,7 @@ coverage: python_test
 	coverage html -d $(COVERAGE_DIR)/python
 	@echo "Coverage report generated for Python in $(COVERAGE_DIR)/python"
 	
-upload: 
+publish: 
 	python setup.py sdist bdist_wheel
 	twine upload dist/* 
 # Clean the build directory

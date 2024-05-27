@@ -80,7 +80,7 @@ class Sorting:
         print(f"{n_time_units=}")
 
     def merge_cpp(self):
-        self.cpp_sorting.merge_sort()
+        self.cpp_sorting.merge()
         self.data = self.cpp_sorting.data
 
     def merge(self):
@@ -133,7 +133,7 @@ class Sorting:
                 self.n_time_units += 1
 
     def quick_cpp(self):
-        self.cpp_sorting.quick_sort()
+        self.cpp_sorting.quick()
         self.data = self.cpp_sorting.data
 
     def quick(self):

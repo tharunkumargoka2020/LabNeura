@@ -1,5 +1,5 @@
 import unittest
-from labneura.algorithms.sorting import Sorting
+from ...labneura.algorithms.sorting import Sorting
 
 class TestSortingAlgorithms(unittest.TestCase):
     
@@ -156,26 +156,26 @@ class TestSortingAlgorithms(unittest.TestCase):
         self.sorting4.merge()
         self.assertEqual(self.arr4, sorted_arr)
 
-    # def test_merge_cpp(self):
-    #     sorted_arr = [1, 5, 7, 8, 9, 10]
-    #     self.sorting1 = Sorting(self.arr1)
-    #     self.sorting1.merge_cpp()
-    #     self.assertEqual(self.sorting1.data, sorted_arr)
+    def test_merge_cpp(self):
+        sorted_arr = [1, 5, 7, 8, 9, 10]
+        self.sorting1 = Sorting(self.arr1)
+        self.sorting1.merge_cpp()
+        self.assertEqual(self.sorting1.data, sorted_arr)
 
-    #     sorted_arr = [1, 1, 2, 3, 6, 8, 10]
-    #     self.sorting2 = Sorting(self.arr2)
-    #     self.sorting2.merge_cpp()
-    #     self.assertEqual(self.sorting2.data, sorted_arr)
+        sorted_arr = [1, 1, 2, 3, 6, 8, 10]
+        self.sorting2 = Sorting(self.arr2)
+        self.sorting2.merge_cpp()
+        self.assertEqual(self.sorting2.data, sorted_arr)
 
-    #     sorted_arr = []
-    #     self.sorting3 = Sorting(self.arr3)
-    #     self.sorting3.merge_cpp()
-    #     self.assertEqual(self.sorting3.data, sorted_arr)
+        sorted_arr = []
+        self.sorting3 = Sorting(self.arr3)
+        self.sorting3.merge_cpp()
+        self.assertEqual(self.sorting3.data, sorted_arr)
 
-    #     sorted_arr = [1]
-    #     self.sorting4 = Sorting(self.arr4)
-    #     self.sorting4.merge_cpp()
-    #     self.assertEqual(self.sorting4.data, sorted_arr)
+        sorted_arr = [1]
+        self.sorting4 = Sorting(self.arr4)
+        self.sorting4.merge_cpp()
+        self.assertEqual(self.sorting4.data, sorted_arr)
         
     def test_quick(self):
         sorted_arr = [1, 5, 7, 8, 9, 10]
@@ -198,26 +198,26 @@ class TestSortingAlgorithms(unittest.TestCase):
         self.sorting4.quick()
         self.assertEqual(self.arr4, sorted_arr)
 
-    # def test_quick_cpp(self):
-    #     sorted_arr = [1, 5, 7, 8, 9, 10]
-    #     self.sorting1 = Sorting(self.arr1)
-    #     self.sorting1.quick_cpp()
-    #     self.assertEqual(self.sorting1.data, sorted_arr)
+    def test_quick_cpp(self):
+        sorted_arr = [1, 5, 7, 8, 9, 10]
+        self.sorting1 = Sorting(self.arr1)
+        self.sorting1.quick_cpp()
+        self.assertEqual(self.sorting1.data, sorted_arr)
 
-    #     sorted_arr = [1, 1, 2, 3, 6, 8, 10]
-    #     self.sorting2 = Sorting(self.arr2)
-    #     self.sorting2.quick_cpp()
-    #     self.assertEqual(self.sorting2.data, sorted_arr)
+        sorted_arr = [1, 1, 2, 3, 6, 8, 10]
+        self.sorting2 = Sorting(self.arr2)
+        self.sorting2.quick_cpp()
+        self.assertEqual(self.sorting2.data, sorted_arr)
 
-    #     sorted_arr = []
-    #     self.sorting3 = Sorting(self.arr3)
-    #     self.sorting3.quick_cpp()
-    #     self.assertEqual(self.sorting3.data, sorted_arr)
+        sorted_arr = []
+        self.sorting3 = Sorting(self.arr3)
+        self.sorting3.quick_cpp()
+        self.assertEqual(self.sorting3.data, sorted_arr)
 
-    #     sorted_arr = [1]
-    #     self.sorting4 = Sorting(self.arr4)
-    #     self.sorting4.quick_cpp()
-    #     self.assertEqual(self.sorting4.data, sorted_arr)
+        sorted_arr = [1]
+        self.sorting4 = Sorting(self.arr4)
+        self.sorting4.quick_cpp()
+        self.assertEqual(self.sorting4.data, sorted_arr)
 
 if __name__ == '__main__':
     unittest.main()

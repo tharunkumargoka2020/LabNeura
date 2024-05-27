@@ -35,7 +35,7 @@ class CMakeBuild(build_ext):
 
 setup(
     name='labneura',
-    version='0.0.7',
+    version='0.0.8',
     author='Tharun Kumar Goka',
     author_email='tharunkumargoka2020@gmail.com',
     description='Python package for ML and EDA functionalities with C++ backend',

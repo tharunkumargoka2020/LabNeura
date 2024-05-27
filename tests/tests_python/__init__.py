@@ -1,0 +1,2 @@
+from .test_linear_regression import test_linear_regression
+from .test_sorting import TestSortingAlgorithms
