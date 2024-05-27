@@ -1,13 +1,21 @@
 #pragma once
 #include <vector>
+#include <string>
+#include <map>
 
 class LinearRegression {
 public:
-    LinearRegression() = default;
-    void fit(const std::vector<double>& x, const std::vector<double>& y);
+    LinearRegression(std::vector<double>& x, std::vector<double>& y);
+    void fit();
     double predict(double x);
+    double getSlope();
+    double getIntercept();
+    std::map<std::string, double>& getWeights();
 
+    std::vector<double> X;
+    std::vector<double> Y;
 private:
-    double slope = 0.0;
-    double intercept = 0.0;
+    double slope_;
+    double intercept_;
+    std::map<std::string, double> weights_;
 };

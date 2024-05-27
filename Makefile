@@ -64,3 +64,5 @@ clean:
 	rm -rf $(PYTHON_DIR)/*.egg-info
 	find . -type f -name '*.pyc' -delete
 	find . -type d -name '__pycache__' -delete
+	rm -rf $(PYTHON_DIR)/.pytest_cache
+	rm -rf $(PYTHON_DIR)/htmlcov

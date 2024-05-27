@@ -35,11 +35,11 @@ class CMakeBuild(build_ext):
 
 setup(
     name='labneura',
-    version='0.0.6',
+    version='0.0.7',
     author='Tharun Kumar Goka',
     author_email='tharunkumargoka2020@gmail.com',
     description='Python package for ML and EDA functionalities with C++ backend',
-    ext_modules=[CMakeExtension('mlpackage', sourcedir='core')],
+    ext_modules=[CMakeExtension('cpp', sourcedir='core')],
     cmdclass=dict(build_ext=CMakeBuild),
     packages=setuptools.find_packages(),
     zip_safe=False,

@@ -1,8 +1,8 @@
-import mlcpp
+from labneura.ml.linear_regression import LinearRegression
 
 def test_linear_regression():
-    lr = mlcpp.LinearRegression()
-    lr.fit([1, 2, 3], [2, 4, 6])
+    lr =  LinearRegression([1, 2, 3], [2, 4, 6])
+    lr.fit()
     assert lr.predict(4) == 8.0
 
 if __name__ == "__main__":
