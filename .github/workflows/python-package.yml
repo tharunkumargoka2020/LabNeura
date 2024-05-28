@@ -35,9 +35,53 @@ jobs:
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    - name: Test with pytest
+    # - name: Test with pytest
+    #   run: |
+    #     make test
+    # - name: Coverage code
+    #   run: |
+    #     make coverage
+    - name: Upload Coverage to Codecov
+      uses: codecov/codecov-action@v2
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: ./coverage.xml
+
+    - name: Check Coverage
+      id: check-coverage
       run: |
-        make test
-    - name: Coverage code
+        COVERAGE=$(pytest --cov=./ --cov-report=term | grep "TOTAL" | awk '{print $4}' | sed 's/%//')
+        echo "COVERAGE=$COVERAGE" >> $GITHUB_ENV
+
+    - name: Create Comment on PR
+      if: ${{ github.event_name == 'pull_request' }}
       run: |
-        make coverage
+        COVERAGE=$(cat $GITHUB_ENV | grep COVERAGE | cut -d '=' -f 2)
+        if (( $(echo "$COVERAGE < 90" | bc -l) )); then
+          echo "Coverage is below 90%. Please increase the test coverage." | tee result.txt
+          exit 1
+        else
+          echo "Coverage is satisfactory: $COVERAGE%" | tee result.txt
+        fi
+
+    - name: Post PR comment
+      if: ${{ github.event_name == 'pull_request' }}
+      uses: peter-evans/create-or-update-comment@v1
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        issue-number: ${{ github.event.pull_request.number }}
+        body: |
+          **CI/CD Pipeline Result**
+          - Build: ${{ job.status }}
+          - Coverage: ${{ steps.check-coverage.outputs.coverage }}%
+          - Status: ${{ job.status }}
+          - [View Code Coverage](https://codecov.io/gh/${{ github.repository }}/commit/${{ github.sha }})
+
+    - name: Fail if coverage is less than 90%
+      if: ${{ github.event_name == 'pull_request' }}
+      run: |
+        COVERAGE=$(cat $GITHUB_ENV | grep COVERAGE | cut -d '=' -f 2)
+        if (( $(echo "$COVERAGE < 90" | bc -l) )); then
+          echo "Coverage is below 90%. Failing the build."
+          exit 1
+        fi
