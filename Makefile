@@ -22,6 +22,7 @@ all: build install test coverage
 # Build the C++ code
 build:
 	pip3 install pybind11[global]
+	pip3 install coverage
 	@echo "Building C++ code..."
 	mkdir -p $(BUILD_DIR)
 	cd $(BUILD_DIR) && $(CMAKE) ../$(CORE_DIR) && $(CMAKE) --build .
