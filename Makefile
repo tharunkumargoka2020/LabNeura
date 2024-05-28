@@ -21,7 +21,7 @@ all: build install test coverage
 
 # Build the C++ code
 build:
-	pip3 install pybind11
+	pip3 install pybind11[global]
 	@echo "Building C++ code..."
 	mkdir -p $(BUILD_DIR)
 	cd $(BUILD_DIR) && $(CMAKE) ../$(CORE_DIR) && $(CMAKE) --build .
@@ -39,7 +39,7 @@ cpp_test: build
 # Run Python tests
 python_test: install
 	@echo "Running Python tests..."
-	pytest $(PYTHON_TEST_DIR)
+	pytest $(PYTHON_DIR)
 
 # Run all tests
 test: python_test
@@ -47,7 +47,7 @@ test: python_test
 # Generate coverage reports
 coverage: python_test
 	@echo "Generating coverage report for Python..."
-	coverage run --source=$(PYTHON_PACKAGE) -m pytest $(PYTHON_TEST_DIR)
+	coverage run --source=$(PYTHON_PACKAGE) -m pytest $(PYTHON_DIR)
 	coverage report -m
 	coverage html -d $(COVERAGE_DIR)/python
 	@echo "Coverage report generated for Python in $(COVERAGE_DIR)/python"
@@ -67,3 +67,4 @@ clean:
 	find . -type d -name '__pycache__' -delete
 	rm -rf $(PYTHON_DIR)/.pytest_cache
 	rm -rf $(PYTHON_DIR)/htmlcov
+	rm ${PYTHON_DIR}/.coverage
