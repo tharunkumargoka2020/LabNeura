@@ -65,7 +65,7 @@ jobs:
         fi
 
     - name: Create Comment on PR
-      if: ${{ github.event_name == 'pull_request' }}
+      if: steps.check-comment.outputs.result != 'Comment already exists'
       uses: peter-evans/create-or-update-comment@v2
       with:
         token: ${{ secrets.GH_PAT }}
@@ -89,3 +89,10 @@ jobs:
         git checkout main
         git merge --no-ff ${{ github.event.pull_request.head.ref }}
         git push origin main
+
+    - name: Debug Output
+      run: |
+        echo "Event name: ${{ github.event_name }}"
+        echo "Event action: ${{ github.event.action }}"
+        echo "PR merged: ${{ github.event.pull_request.merged }}"
+        echo "Coverage: ${{ steps.check-coverage.outputs.coverage }}"
