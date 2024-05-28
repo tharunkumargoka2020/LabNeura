@@ -73,6 +73,19 @@ jobs:
         body: |
           **CI/CD Pipeline Result**
           - Build: ${{ job.status }}
-          - Coverage: ${{ steps.check-coverage.outputs.coverage }}%
+          - Coverage: ${{ env.COVERAGE }}%
           - Status: ${{ job.status }}
           - [View Code Coverage](https://codecov.io/gh/${{ github.repository }}/commit/${{ github.sha }})
+
+    - name: Merge to Main if Coverage > 90%
+      if: >
+        github.event_name == 'pull_request' &&
+        github.event.action == 'closed' &&
+        github.event.pull_request.merged == true &&
+        steps.check-coverage.outputs.coverage >= 90
+      run: |
+        git config --global user.name 'Goka Tharun Kumar'
+        git config --global user.email 'tharunkumargoka2020@gmail.com'
+        git checkout main
+        git merge --no-ff ${{ github.event.pull_request.head.ref }}
+        git push origin main
