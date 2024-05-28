@@ -52,6 +52,7 @@ coverage: python_test
 	coverage report -m
 	coverage html -d $(COVERAGE_DIR)/python
 	@echo "Coverage report generated for Python in $(COVERAGE_DIR)/python"
+	pytest --cov=./ --cov-report=xml --cov-report=term
 	
 publish: 
 	python setup.py sdist bdist_wheel
