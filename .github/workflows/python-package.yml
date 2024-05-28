@@ -41,34 +41,34 @@ jobs:
     # - name: Coverage code
     #   run: |
     #     make coverage
+    - name: Run Tests with Coverage
+      run: |
+        make install
+        pytest --cov=./ --cov-report=xml --cov-report=term
+        COVERAGE=$(pytest --cov=./ --cov-report=term | grep "TOTAL" | awk '{print $4}' | sed 's/%//')
+        echo "COVERAGE=$COVERAGE" >> $GITHUB_ENV
+
     - name: Upload Coverage to Codecov
       uses: codecov/codecov-action@v2
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         files: ./coverage.xml
 
-    - name: Check Coverage
+    - name: Fail if coverage is less than 90%
       id: check-coverage
       run: |
-        COVERAGE=$(pytest --cov=./ --cov-report=term | grep "TOTAL" | awk '{print $4}' | sed 's/%//')
-        echo "COVERAGE=$COVERAGE" >> $GITHUB_ENV
+        if [ $(echo "${COVERAGE} < 90" | bc) -eq 1 ]; then
+          echo "Coverage is below 90%. Failing the build."
+          exit 1
+        else
+          echo "Coverage is satisfactory: ${COVERAGE}%"
+        fi
 
     - name: Create Comment on PR
       if: ${{ github.event_name == 'pull_request' }}
-      run: |
-        COVERAGE=$(cat $GITHUB_ENV | grep COVERAGE | cut -d '=' -f 2)
-        if (( $(echo "$COVERAGE < 90" | bc -l) )); then
-          echo "Coverage is below 90%. Please increase the test coverage." | tee result.txt
-          exit 1
-        else
-          echo "Coverage is satisfactory: $COVERAGE%" | tee result.txt
-        fi
-
-    - name: Post PR comment
-      if: ${{ github.event_name == 'pull_request' }}
-      uses: peter-evans/create-or-update-comment@v1
+      uses: peter-evans/create-or-update-comment@v2
       with:
-        token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ secrets.GH_PAT }}
         issue-number: ${{ github.event.pull_request.number }}
         body: |
           **CI/CD Pipeline Result**
@@ -76,12 +76,3 @@ jobs:
           - Coverage: ${{ steps.check-coverage.outputs.coverage }}%
           - Status: ${{ job.status }}
           - [View Code Coverage](https://codecov.io/gh/${{ github.repository }}/commit/${{ github.sha }})
-
-    - name: Fail if coverage is less than 90%
-      if: ${{ github.event_name == 'pull_request' }}
-      run: |
-        COVERAGE=$(cat $GITHUB_ENV | grep COVERAGE | cut -d '=' -f 2)
-        if (( $(echo "$COVERAGE < 90" | bc -l) )); then
-          echo "Coverage is below 90%. Failing the build."
-          exit 1
-        fi
