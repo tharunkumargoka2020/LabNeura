@@ -28,7 +28,7 @@ build:
 	cd $(BUILD_DIR) && $(CMAKE) ../$(CORE_DIR) && $(CMAKE) --build .
 
 # Install the Python package
-install: build
+install: 
 	@echo "Installing Python package..."
 	cd $(PYTHON_DIR) && python setup.py install
 
@@ -40,16 +40,14 @@ cpp_test: build
 # Run Python tests
 python_test: install
 	@echo "Running Python tests..."
-	pytest $(PYTHON_DIR)
+	pytest -n auto -x --maxfail=1
 
 # Run all tests
 test: python_test
 
 # Generate coverage reports
 coverage: python_test
-	@echo "Generating coverage report for Python..."
-	coverage run --source=$(PYTHON_PACKAGE) -m pytest $(PYTHON_DIR)
-	coverage report -m
+	coverage run -m pytest ${TESTS_DIR}
 	coverage html -d $(COVERAGE_DIR)/python
 	@echo "Coverage report generated for Python in $(COVERAGE_DIR)/python"
 	pytest --cov=./ --cov-report=xml --cov-report=term
