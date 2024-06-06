@@ -1,3 +1,5 @@
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/tharungoka/labneura/CI)](https://github.com/tharungoka/labneura/actions)
+
 # LabNeura
 
 LabNeura is a comprehensive library designed for implementing basic to advanced algorithms in C++, with a focus on efficiency. The library is exposed as a module using Pybind11, allowing users to call its functionality from both Python and C++. LabNeura covers a wide range of algorithms, from basic sorting and graph algorithms to machine learning, reinforcement learning, and deep learning algorithms.

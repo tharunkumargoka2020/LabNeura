@@ -62,7 +62,6 @@ jobs:
     #     fi
 
     - name: Create Comment on PR
-      if: steps.check-comment.outputs.result != 'Comment already exists'
       uses: peter-evans/create-or-update-comment@v2
       with:
         token: ${{ secrets.GH_PAT }}
