@@ -60,14 +60,3 @@ jobs:
     #     else
     #       echo "Coverage is satisfactory: ${COVERAGE}%"
     #     fi
-
-    - name: Create Comment on PR
-      uses: peter-evans/create-or-update-comment@v2
-      with:
-        token: ${{ secrets.GH_PAT }}
-        issue-number: ${{ github.event.pull_request.number }}
-        body: |
-          **CI/CD Pipeline Result**
-          - Build: ${{ job.status }}
-          - Test: ${{ job.status }}
-          - Status: ${{ job.status }}
