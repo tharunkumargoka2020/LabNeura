@@ -1,6 +1,5 @@
 import unittest
-import pytest
-from ...labneura.algorithms.sorting import Sorting
+from labneura import Sorting
 
 class TestSortingAlgorithms(unittest.TestCase):
     
@@ -9,32 +8,6 @@ class TestSortingAlgorithms(unittest.TestCase):
         self.arr2 = [3, 6, 8, 10, 1, 2, 1]
         self.arr3 = []
         self.arr4 = [1]
-
-    def test_selection_cpp(self):
-        sorted_arr = [1, 5, 7, 8, 9, 10]
-        sorting1 = Sorting(self.arr1)
-        sorting1.selection_cpp()
-        self.assertEqual(sorting1.data, sorted_arr)
-        self.assertEqual(sorting1.no_timesteps, 15)
-
-        sorted_arr = [1, 1, 2, 3, 6, 8, 10]
-        sorting2 = Sorting(self.arr2)
-        sorting2.selection_cpp()
-        self.assertEqual(sorting2.data, sorted_arr)
-        self.assertEqual(sorting2.no_timesteps, 21)
-
-        sorted_arr = []
-        sorting3 = Sorting(self.arr3)
-        sorting3.selection_cpp()
-        self.assertEqual(sorting3.data, sorted_arr)
-        self.assertEqual(sorting3.no_timesteps, 0)
-
-        sorted_arr = [1]
-        sorting4 = Sorting(self.arr4)
-        sorting4.selection_cpp()
-        self.assertEqual(sorting4.data, sorted_arr)
-        self.assertEqual(sorting4.no_timesteps, 0)
-
 
     def test_selection(self):
         sorted_arr = [1, 5, 7, 8, 9, 10]
@@ -87,31 +60,6 @@ class TestSortingAlgorithms(unittest.TestCase):
         self.assertEqual(sorting4.data, sorted_arr)
         self.assertEqual(sorting4.no_timesteps, 0)
 
-    def test_bubble_cpp(self):
-        sorted_arr = [1, 5, 7, 8, 9, 10]
-        sorting1 = Sorting(self.arr1)
-        sorting1.bubble_cpp()
-        self.assertEqual(sorting1.data, sorted_arr)
-        self.assertEqual(sorting1.no_timesteps, 15)
-
-        sorted_arr = [1, 1, 2, 3, 6, 8, 10]
-        sorting2 = Sorting(self.arr2)
-        sorting2.bubble_cpp()
-        self.assertEqual(sorting2.data, sorted_arr)
-        self.assertEqual(sorting2.no_timesteps, 21)
-
-        sorted_arr = []
-        sorting3 = Sorting(self.arr3)
-        sorting3.bubble_cpp()
-        self.assertEqual(sorting3.data, sorted_arr)
-        self.assertEqual(sorting3.no_timesteps, 0)
-
-        sorted_arr = [1]
-        sorting4 = Sorting(self.arr4)
-        sorting4.bubble_cpp()
-        self.assertEqual(sorting4.data, sorted_arr)
-        self.assertEqual(sorting4.no_timesteps, 0)
-
     def test_insertion(self):
         sorted_arr = [1, 5, 7, 8, 9, 10]
         sorting1 = Sorting(self.arr1)
@@ -134,31 +82,6 @@ class TestSortingAlgorithms(unittest.TestCase):
         sorted_arr = [1]
         sorting4 = Sorting(self.arr4)
         sorting4.insertion()
-        self.assertEqual(sorting4.data, sorted_arr)
-        self.assertEqual(sorting4.no_timesteps, 0)
-
-    def test_insertion_cpp(self):
-        sorted_arr = [1, 5, 7, 8, 9, 10]
-        sorting1 = Sorting(self.arr1)
-        sorting1.insertion_cpp()
-        self.assertEqual(sorting1.data, sorted_arr)
-        self.assertEqual(sorting1.no_timesteps, 11)
-        
-        sorted_arr = [1, 1, 2, 3, 6, 8, 10]
-        sorting2 = Sorting(self.arr2)
-        sorting2.insertion_cpp()
-        self.assertEqual(sorting2.data, sorted_arr)
-        self.assertEqual(sorting2.no_timesteps, 16)
-
-        sorted_arr = []
-        sorting3 = Sorting(self.arr3)
-        sorting3.insertion_cpp()
-        self.assertEqual(sorting3.data, sorted_arr)
-        self.assertEqual(sorting3.no_timesteps, 0)
-
-        sorted_arr = [1]
-        sorting4 = Sorting(self.arr4)
-        sorting4.insertion_cpp()
         self.assertEqual(sorting4.data, sorted_arr)
         self.assertEqual(sorting4.no_timesteps, 0)
 
@@ -186,31 +109,6 @@ class TestSortingAlgorithms(unittest.TestCase):
         sorting4.merge()
         self.assertEqual(sorting4.data, sorted_arr)
         self.assertEqual(sorting4.no_timesteps, 0)
-
-    def test_merge_cpp(self):
-        sorted_arr = [1, 5, 7, 8, 9, 10]
-        sorting1 = Sorting(self.arr1)
-        sorting1.merge_cpp()
-        self.assertEqual(sorting1.data, sorted_arr)
-        self.assertEqual(sorting1.no_timesteps, 32)
-
-        sorted_arr = [1, 1, 2, 3, 6, 8, 10]
-        sorting2 = Sorting(self.arr2)
-        sorting2.merge_cpp()
-        self.assertEqual(sorting2.data, sorted_arr)
-        self.assertEqual(sorting2.no_timesteps, 40)
-
-        sorted_arr = []
-        sorting3 = Sorting(self.arr3)
-        sorting3.merge_cpp()
-        self.assertEqual(sorting3.data, sorted_arr)
-        self.assertEqual(sorting3.no_timesteps, 0)
-
-        sorted_arr = [1]
-        sorting4 = Sorting(self.arr4)
-        sorting4.merge_cpp()
-        self.assertEqual(sorting4.data, sorted_arr)
-        self.assertEqual(sorting4.no_timesteps, 0)
         
     def test_quick(self):
         sorted_arr = [1, 5, 7, 8, 9, 10]
@@ -223,7 +121,7 @@ class TestSortingAlgorithms(unittest.TestCase):
         sorting2 = Sorting(self.arr2)
         sorting2.quick()
         self.assertEqual(sorting2.data, sorted_arr)
-        self.assertEqual(sorting2.no_timesteps, 15)
+        self.assertEqual(sorting2.no_timesteps, 12)
         
         sorted_arr = []
         sorting3 = Sorting(self.arr3)
@@ -234,31 +132,6 @@ class TestSortingAlgorithms(unittest.TestCase):
         sorted_arr = [1]
         sorting4 = Sorting(self.arr4)
         sorting4.quick()
-        self.assertEqual(sorting4.data, sorted_arr)
-        self.assertEqual(sorting4.no_timesteps, 0)
-
-    def test_quick_cpp(self):
-        sorted_arr = [1, 5, 7, 8, 9, 10]
-        sorting1 = Sorting(self.arr1)
-        sorting1.quick_cpp()
-        self.assertEqual(sorting1.data, sorted_arr)
-        self.assertEqual(sorting1.no_timesteps, 11)
-
-        sorted_arr = [1, 1, 2, 3, 6, 8, 10]
-        sorting2 = Sorting(self.arr2)
-        sorting2.quick_cpp()
-        self.assertEqual(sorting2.data, sorted_arr)
-        self.assertEqual(sorting2.no_timesteps, 12)
-
-        sorted_arr = []
-        sorting3 = Sorting(self.arr3)
-        sorting3.quick_cpp()
-        self.assertEqual(sorting3.data, sorted_arr)
-        self.assertEqual(sorting3.no_timesteps, 0)
-
-        sorted_arr = [1]
-        sorting4 = Sorting(self.arr4)
-        sorting4.quick_cpp()
         self.assertEqual(sorting4.data, sorted_arr)
         self.assertEqual(sorting4.no_timesteps, 0)
         

@@ -1,4 +1,4 @@
-from ...labneura.ml.linear_regression import LinearRegression
+from labneura import LinearRegression
 
 def test_linear_regression():
     lr =  LinearRegression([1, 2, 3], [2, 4, 6])

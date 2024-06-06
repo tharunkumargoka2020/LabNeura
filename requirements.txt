@@ -1,5 +1,2 @@
 setuptools
 pytest
-pytest-cov
-pytest-xdist
-pytest-ordering

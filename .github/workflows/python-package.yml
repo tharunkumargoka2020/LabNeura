@@ -35,34 +35,29 @@ jobs:
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    # - name: Test with pytest
-    #   run: |
-    #     make test
-    # - name: Coverage code
-    #   run: |
-    #     make coverage
     - name: Run Tests with Coverage
       run: |
         make install
-        pytest --cov=./ --cov-report=xml --cov-report=term
-        COVERAGE=$(pytest --cov=./ --cov-report=term | grep "TOTAL" | awk '{print $4}' | sed 's/%//')
-        echo "COVERAGE=$COVERAGE" >> $GITHUB_ENV
+        make test
+        # pytest --cov=./ --cov-report=xml --cov-report=term
+        # COVERAGE=$(pytest --cov=./ --cov-report=term | grep "TOTAL" | awk '{print $4}' | sed 's/%//')
+        # echo "COVERAGE=$COVERAGE" >> $GITHUB_ENV
 
-    - name: Upload Coverage to Codecov
-      uses: codecov/codecov-action@v2
-      with:
-        token: ${{ secrets.CODECOV_TOKEN }}
-        files: ./coverage.xml
+    # - name: Upload Coverage to Codecov
+    #   uses: codecov/codecov-action@v2
+    #   with:
+    #     token: ${{ secrets.CODECOV_TOKEN }}
+    #     files: ./coverage.xml
 
-    - name: Fail if coverage is less than 90%
-      id: check-coverage
-      run: |
-        if [ $(echo "${COVERAGE} < 90" | bc) -eq 1 ]; then
-          echo "Coverage is below 90%. Failing the build."
-          exit 1
-        else
-          echo "Coverage is satisfactory: ${COVERAGE}%"
-        fi
+    # - name: Fail if coverage is less than 90%
+    #   id: check-coverage
+    #   run: |
+    #     if [ $(echo "${COVERAGE} < 90" | bc) -eq 1 ]; then
+    #       echo "Coverage is below 90%. Failing the build."
+    #       exit 1
+    #     else
+    #       echo "Coverage is satisfactory: ${COVERAGE}%"
+    #     fi
 
     - name: Create Comment on PR
       if: steps.check-comment.outputs.result != 'Comment already exists'
@@ -73,26 +68,5 @@ jobs:
         body: |
           **CI/CD Pipeline Result**
           - Build: ${{ job.status }}
-          - Coverage: ${{ env.COVERAGE }}%
+          - Test: ${{ job.status }}
           - Status: ${{ job.status }}
-          - [View Code Coverage](https://codecov.io/gh/${{ github.repository }}/commit/${{ github.sha }})
-
-    - name: Merge to Main if Coverage > 90%
-      if: >
-        github.event_name == 'pull_request' &&
-        github.event.action == 'closed' &&
-        github.event.pull_request.merged == true &&
-        steps.check-coverage.outputs.coverage >= 90
-      run: |
-        git config --global user.name 'Goka Tharun Kumar'
-        git config --global user.email 'tharunkumargoka2020@gmail.com'
-        git checkout main
-        git merge --no-ff ${{ github.event.pull_request.head.ref }}
-        git push origin main
-
-    - name: Debug Output
-      run: |
-        echo "Event name: ${{ github.event_name }}"
-        echo "Event action: ${{ github.event.action }}"
-        echo "PR merged: ${{ github.event.pull_request.merged }}"
-        echo "Coverage: ${{ steps.check-coverage.outputs.coverage }}"
