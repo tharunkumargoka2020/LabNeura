@@ -13,5 +13,8 @@ PYBIND11_MODULE(algocpp, m) {
         .def("bubble", &Sorting::bubble)
         .def("merge", &Sorting::merge)
         .def("quick", &Sorting::quick)
-        .def_property("data", &Sorting::getData, &Sorting::setData);
+        .def_property("data", &Sorting::getData, &Sorting::setData)
+        .def_property_readonly("no_timesteps", &Sorting::getTimeSteps)
+        .def_property_readonly("no_swaps", &Sorting::getSwaps)
+        .def_property_readonly("no_recursive_calls", &Sorting::getRecursiveCalls);
 }
