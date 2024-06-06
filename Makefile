@@ -17,12 +17,11 @@ GENHTML=genhtml
 COVERAGE_DIR=$(BUILD_DIR)/coverage
 
 # Default target
-all: build install test coverage
+all: build install test
 
 # Build the C++ code
 build:
 	pip3 install pybind11[global]
-	pip3 install coverage
 	@echo "Building C++ code..."
 	mkdir -p $(BUILD_DIR)
 	cd $(BUILD_DIR) && $(CMAKE) ../$(CORE_DIR) && $(CMAKE) --build .
@@ -44,17 +43,11 @@ python_test: install
 
 # Run all tests
 test: python_test
-
-# Generate coverage reports
-coverage: python_test
-	coverage run -m pytest ${TESTS_DIR}
-	coverage html -d $(COVERAGE_DIR)/python
-	@echo "Coverage report generated for Python in $(COVERAGE_DIR)/python"
-	pytest --cov=./ --cov-report=xml --cov-report=term
 	
 publish: 
 	python setup.py sdist bdist_wheel
 	twine upload dist/* 
+	
 # Clean the build directory
 clean:
 	@echo "Cleaning up..."
