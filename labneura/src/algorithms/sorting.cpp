@@ -1,4 +1,5 @@
 #include "algorithms/sorting.h"
+#include "utils/timer.h"
 #include <vector>
 #include <iostream>
 
@@ -10,6 +11,7 @@ Sorting::Sorting(std::vector<int> a){
     no_swaps = 0;
 }
 void Sorting::selection(){
+    Timer timer("Sorting::selection");
     no_timesteps = 0;
     no_swaps = 0;
     for (int i=0; i<n-1; i++){
@@ -25,6 +27,7 @@ void Sorting::selection(){
 }
 
 void Sorting::insertion(){
+    Timer timer("Sorting::insertion");
     no_timesteps = 0;
     no_recursive_calls = 0;
     no_swaps = 0;
@@ -48,6 +51,7 @@ void Sorting::insertion(){
 }
 
 void Sorting::bubble(){
+    Timer timer("Sorting::bubble");
     no_recursive_calls = 0;
     no_swaps = 0;
     no_timesteps = 0;
@@ -67,6 +71,7 @@ void Sorting::bubble(){
     }
 }
 void Sorting::merge(){
+    Timer timer("Sorting::merge");
     no_recursive_calls = 0;
     no_swaps = 0;
     no_timesteps = 0;
@@ -129,6 +134,7 @@ void Sorting::merge_sort(std::vector<int>& dt, int lower, int upper){
 }
 
 void Sorting::quick(){
+    Timer timer("Sorting::quick");
     no_recursive_calls = 0;
     no_timesteps = 0;
     no_swaps = 0;

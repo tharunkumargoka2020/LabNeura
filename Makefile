@@ -4,7 +4,7 @@
 
 # Variables
 BUILD_DIR=build
-CORE_DIR=core
+CORE_DIR=labneura
 PYTHON_DIR=.
 TESTS_DIR=tests
 CPP_TEST_DIR=$(TESTS_DIR)/tests_cpp
@@ -21,15 +21,14 @@ all: build install test
 
 # Build the C++ code
 build:
-	pip3 install pybind11[global]
 	@echo "Building C++ code..."
 	mkdir -p $(BUILD_DIR)
 	cd $(BUILD_DIR) && $(CMAKE) ../$(CORE_DIR) && $(CMAKE) --build .
 
 # Install the Python package
-install: 
+install:
 	@echo "Installing Python package..."
-	cd $(PYTHON_DIR) && python setup.py install
+	pip3 install $(PYTHON_DIR)
 
 # Run C++ tests
 cpp_test: build
