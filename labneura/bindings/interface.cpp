@@ -1,35 +1,32 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
-#include "algorithms/sorting.h"
-#include "algorithms/graph.h"
-#include "ml/linear_regression.h"
-#include <vector>
-
-namespace py = pybind11;
+#include <string>
+#include "data.h"
+#include "algorithms.h"
+#include "ml.h"
 
 PYBIND11_MODULE(labneura, m) {
-    py::class_<Sorting>(m, "Sorting")
-        .def(py::init<std::vector<int>>())
-        .def("selection", &Sorting::selection)
-        .def("insertion", &Sorting::insertion)
-        .def("bubble", &Sorting::bubble)
-        .def("merge", &Sorting::merge)
-        .def("quick", &Sorting::quick)
-        .def_property("data", &Sorting::getData, &Sorting::setData)
-        .def_property_readonly("no_timesteps", &Sorting::getTimeSteps)
-        .def_property_readonly("no_swaps", &Sorting::getSwaps)
-        .def_property_readonly("no_recursive_calls", &Sorting::getRecursiveCalls);
-
-    py::class_<Graph>(m, "Graph")
-        .def(py::init<int>());
-
-    py::class_<LinearRegression>(m, "LinearRegression")
-        .def(py::init<std::vector<double>&,std::vector<double>&>())
-        .def("fit", &LinearRegression::fit)
-        .def("predict", &LinearRegression::predict)
-        .def_property_readonly("slope_", &LinearRegression::getSlope)
-        .def_property_readonly("intercept_", &LinearRegression::getIntercept)
-        .def_property_readonly("weights_", &LinearRegression::getWeights)
-        .def_readwrite("X", &LinearRegression::X)
-        .def_readwrite("Y", &LinearRegression::Y);
+    bind_linear_regression(m);
+    bind_sorting(m);
+    bind_graph(m);
+    bind_vector_wrapper<py::object>(m);
+    bind_vector<int>(m, "Int");
+    bind_vector<float>(m, "Float");
+    bind_vector<double>(m, "Double");
+    bind_vector<std::string>(m, "String");
+    bind_list_wrapper<py::object>(m);
+    bind_list<int>(m, "Int");
+    bind_list<float>(m, "Float");
+    bind_list<double>(m, "Double");
+    bind_list<std::string>(m, "String");
+    bind_stack_wrapper<py::object>(m);
+    bind_stack<int>(m, "Int");
+    bind_stack<float>(m, "Float");
+    bind_stack<double>(m, "Double");
+    bind_stack<std::string>(m, "String");
+    bind_queue_wrapper<py::object>(m);
+    bind_queue<int>(m, "Int");
+    bind_queue<float>(m, "Float");
+    bind_queue<double>(m, "Double");
+    bind_queue<std::string>(m, "String");
 }
