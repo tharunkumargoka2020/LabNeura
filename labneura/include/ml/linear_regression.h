@@ -1,21 +1,21 @@
 #pragma once
-#include <vector>
-#include <string>
-#include <map>
+
+#include <Eigen/Dense>
 
 class LinearRegression {
 public:
-    LinearRegression(std::vector<double>& x, std::vector<double>& y);
-    void fit();
-    double predict(double x);
-    double getSlope();
-    double getIntercept();
-    std::map<std::string, double>& getWeights();
+    LinearRegression(double learning_rate = 0.01, int iterations = 1000);
 
-    std::vector<double> X;
-    std::vector<double> Y;
+    void fit(const Eigen::MatrixXd& X, const Eigen::VectorXd& y);
+    Eigen::VectorXd predict(const Eigen::MatrixXd& X);
+    double cost(const Eigen::MatrixXd& X, const Eigen::VectorXd& y);
+
 private:
-    double slope_;
-    double intercept_;
-    std::map<std::string, double> weights_;
+    double learning_rate;
+    int iterations;
+    Eigen::VectorXd weights;
+    double bias;
+
+    void gradient_descent(const Eigen::MatrixXd& X, const Eigen::VectorXd& y);
 };
+
