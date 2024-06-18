@@ -1,42 +1,39 @@
 #include "ml/linear_regression.h"
-#include <numeric>
 #include <iostream>
-#include <map>
 
-LinearRegression::LinearRegression(std::vector<double>& x, std::vector<double>& y){
-    X = x;
-    Y = y;
-    weights_["slope"] = slope_ = 0.0;
-    weights_["intercept"] = intercept_ = 0.0;
-}
-void LinearRegression::fit() {
-    double x_mean = std::accumulate(X.begin(), X.end(), 0.0) / X.size();
-    double y_mean = std::accumulate(Y.begin(),Y.end(), 0.0) / Y.size();
+LinearRegression::LinearRegression(double learning_rate, int iterations)
+    : learning_rate(learning_rate), iterations(iterations), bias(0) {}
 
-    double num = 0.0, den = 0.0;
-    for (size_t i = 0; i < X.size(); ++i) {
-        num += (X[i] - x_mean) * (Y[i] - y_mean);
-        den += (X[i] - x_mean) * (X[i] - x_mean);
+void LinearRegression::fit(const Eigen::MatrixXd& X, const Eigen::VectorXd& y) {
+    int m = X.rows();
+    int n = X.cols();
+    weights = Eigen::VectorXd::Zero(n);
+    bias = 0.0;
+
+    for (int i = 0; i < iterations; ++i) {
+        gradient_descent(X, y);
+        if (i % 100 == 0) {
+            std::cout << "Iteration " << i << " - Cost: " << cost(X, y) << std::endl;
+        }
     }
-
-    slope_ = num / den;
-    intercept_ = y_mean - slope_ * x_mean;
-    weights_["slope"] = slope_;
-    weights_["intercept"] = intercept_;
 }
 
-double LinearRegression::predict(double x) {
-    return slope_ * x + intercept_;
+void LinearRegression::gradient_descent(const Eigen::MatrixXd& X, const Eigen::VectorXd& y) {
+    int m = X.rows();
+    Eigen::VectorXd predictions = X * weights + Eigen::VectorXd::Constant(m, bias);
+    Eigen::VectorXd errors = predictions - y;
+
+    weights -= (learning_rate / m) * (X.transpose() * errors);
+    bias -= (learning_rate / m) * errors.sum();
 }
 
-double LinearRegression::getSlope() {
-    return slope_;
+Eigen::VectorXd LinearRegression::predict(const Eigen::MatrixXd& X) {
+    return X * weights + Eigen::VectorXd::Constant(X.rows(), bias);
 }
 
-double LinearRegression::getIntercept() {
-    return intercept_;
-}
-
-std::map<std::string, double>& LinearRegression::getWeights() {
-    return weights_;
+double LinearRegression::cost(const Eigen::MatrixXd& X, const Eigen::VectorXd& y) {
+    int m = X.rows();
+    Eigen::VectorXd predictions = X * weights + Eigen::VectorXd::Constant(m, bias);
+    Eigen::VectorXd errors = predictions - y;
+    return (1.0 / (2 * m)) * errors.array().square().sum();
 }

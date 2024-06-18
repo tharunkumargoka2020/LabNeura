@@ -7,6 +7,10 @@
 #include "data/vector.h"
 #include "data/deque.h"
 #include "data/forward_list.h"
+#include "data/set.h"
+#include "data/map.h"
+#include "data/unordered_set.h"
+#include "data/unordered_map.h"
 
 namespace py = pybind11;
 
@@ -31,7 +35,7 @@ void bind_vector_wrapper(py::module &m) {
         .def("__len__", &VectorWrapper<T>::__len__)
         .def("front", &VectorWrapper<T>::front)
         .def("back", &VectorWrapper<T>::back)
-        .def_property_readonly("data", &VectorWrapper<T>::getData, py::return_value_policy::reference_internal)
+        .def("data", &VectorWrapper<T>::getData, py::return_value_policy::reference_internal)
 
         .def("push_back", &VectorWrapper<T>::push_back)
         .def("pop_back", &VectorWrapper<T>::pop_back)
@@ -39,6 +43,8 @@ void bind_vector_wrapper(py::module &m) {
         .def("erase", &VectorWrapper<T>::erase)
         .def("clear", &VectorWrapper<T>::clear)
         .def("swap", &VectorWrapper<T>::swap)
+
+        .def("find", &VectorWrapper<T>::find)
 
         .def("__iter__", [](VectorWrapper<T> &v) { return py::make_iterator(v.begin(), v.end()); },
              py::keep_alive<0, 1>())
@@ -67,7 +73,7 @@ void bind_vector(py::module &m, const std::string &typestr) {
         .def("__len__", &VectorWrapper<T>::__len__)
         .def("front", &VectorWrapper<T>::front)
         .def("back", &VectorWrapper<T>::back)
-        .def_property_readonly("data", &VectorWrapper<T>::getData, py::return_value_policy::reference_internal)
+        .def("data", &VectorWrapper<T>::getData, py::return_value_policy::reference_internal)
 
         .def("push_back", &VectorWrapper<T>::push_back)
         .def("pop_back", &VectorWrapper<T>::pop_back)
@@ -75,6 +81,8 @@ void bind_vector(py::module &m, const std::string &typestr) {
         .def("erase", &VectorWrapper<T>::erase)
         .def("clear", &VectorWrapper<T>::clear)
         .def("swap", &VectorWrapper<T>::swap)
+
+        .def("find", &VectorWrapper<T>::find)
 
         .def("__iter__", [](VectorWrapper<T> &v) { return py::make_iterator(v.begin(), v.end()); },
              py::keep_alive<0, 1>())
@@ -97,7 +105,7 @@ void bind_deque_wrapper(py::module &m) {
         .def("shrink_to_fit", &DequeWrapper<T>::shrink_to_fit)
         .def("at", &DequeWrapper<T>::at)
         .def("__getitem__", &DequeWrapper<T>::operator[])
-        .def_property_readonly("data", &DequeWrapper<T>::getData, py::return_value_policy::reference_internal)
+        .def("data", &DequeWrapper<T>::getData, py::return_value_policy::reference_internal)
         .def("front", &DequeWrapper<T>::front)
         .def("back", &DequeWrapper<T>::back)
 
@@ -109,6 +117,8 @@ void bind_deque_wrapper(py::module &m) {
         .def("erase", &DequeWrapper<T>::erase)
         .def("clear", &DequeWrapper<T>::clear)
         .def("swap", &DequeWrapper<T>::swap)
+
+        .def("find", &DequeWrapper<T>::find)
 
         .def("__iter__", [](DequeWrapper<T> &v) { return py::make_iterator(v.begin(), v.end()); },
              py::keep_alive<0, 1>())
@@ -132,7 +142,7 @@ void bind_deque(py::module &m, const std::string &type) {
         .def("shrink_to_fit", &DequeWrapper<T>::shrink_to_fit)
         .def("at", &DequeWrapper<T>::at)
         .def("__getitem__", &DequeWrapper<T>::operator[])
-        .def_property_readonly("data", &DequeWrapper<T>::getData, py::return_value_policy::reference_internal)
+        .def("data", &DequeWrapper<T>::getData, py::return_value_policy::reference_internal)
         .def("front", &DequeWrapper<T>::front)
         .def("back", &DequeWrapper<T>::back)
 
@@ -144,6 +154,8 @@ void bind_deque(py::module &m, const std::string &type) {
         .def("erase", &DequeWrapper<T>::erase)
         .def("clear", &DequeWrapper<T>::clear)
         .def("swap", &DequeWrapper<T>::swap)
+
+        .def("find", &DequeWrapper<T>::find)
 
         .def("__iter__", [](DequeWrapper<T> &v) { return py::make_iterator(v.begin(), v.end()); },
              py::keep_alive<0, 1>())
@@ -173,7 +185,9 @@ void bind_list_wrapper(py::module &m) {
 
         .def("front", &ListWrapper<T>::front)
         .def("back", &ListWrapper<T>::back)
-        .def_property_readonly("data", &ListWrapper<T>::getData)
+        .def("data", &ListWrapper<T>::getData)
+        .def("find", &ListWrapper<T>::find)
+
         .def("__len__", &ListWrapper<T>::size)  // Python's len() function
         .def("__iter__", [](ListWrapper<T>& v) { return py::make_iterator(v.begin(), v.end()); },
              py::keep_alive<0, 1>())
@@ -202,7 +216,9 @@ void bind_list(py::module &m, const std::string &type) {
 
         .def("front", &ListWrapper<T>::front)
         .def("back", &ListWrapper<T>::back)
-        .def_property_readonly("data", &ListWrapper<T>::getData)
+        .def("data", &ListWrapper<T>::getData)
+        .def("find", &ListWrapper<T>::find)
+
         .def("__len__", &ListWrapper<T>::size)  // Python's len() function
         .def("__iter__", [](ListWrapper<T>& v) { return py::make_iterator(v.begin(), v.end()); },
              py::keep_alive<0, 1>())
@@ -223,6 +239,9 @@ void bind_forward_list_wrapper(py::module &m) {
         .def("clear", &ForwardListWrapper<T>::clear)
         .def("insert_after", &ForwardListWrapper<T>::insert_after)
         .def("erase_after", &ForwardListWrapper<T>::erase_after)
+        .def("data", &ForwardListWrapper<T>::getData)
+        .def("find", &ForwardListWrapper<T>::find)
+
         .def("__iter__", [](ForwardListWrapper<T> &v) { return py::make_iterator(v.begin(), v.end()); },
              py::keep_alive<0, 1>())
         .def("__len__", [](const ForwardListWrapper<T> &v) { return std::distance(v.begin(), v.end()); });
@@ -241,9 +260,182 @@ void bind_forward_list(py::module &m, const std::string &type) {
         .def("clear", &ForwardListWrapper<T>::clear)
         .def("insert_after", &ForwardListWrapper<T>::insert_after)
         .def("erase_after", &ForwardListWrapper<T>::erase_after)
+        .def("data", &ForwardListWrapper<T>::getData)
+        .def("find", &ForwardListWrapper<T>::find)
+
         .def("__iter__", [](ForwardListWrapper<T> &v) { return py::make_iterator(v.begin(), v.end()); },
              py::keep_alive<0, 1>())
         .def("__len__", [](const ForwardListWrapper<T> &v) { return std::distance(v.begin(), v.end()); });
+}
+
+template <typename T>
+void bind_set_wrapper(py::module &m) {
+    py::class_<SetWrapper<T>>(m, "Set")
+        .def(py::init<>())
+        .def(py::init<const std::set<T>&>())
+        .def("size", &SetWrapper<T>::size)
+        .def("empty", &SetWrapper<T>::empty)
+        .def("insert", &SetWrapper<T>::insert)
+        .def("erase", &SetWrapper<T>::erase)
+        .def("clear", &SetWrapper<T>::clear)
+        .def("contains", &SetWrapper<T>::contains)
+        .def("data", &SetWrapper<T>::getData)
+        .def("find", &SetWrapper<T>::find)
+        .def("__len__", &SetWrapper<T>::size)
+        .def("__iter__", [](SetWrapper<T> &s) { return py::make_iterator(s.begin(), s.end()); },
+             py::keep_alive<0, 1>());
+}
+
+template <typename T>
+void bind_set(py::module &m, const std::string &type) {
+    py::class_<SetWrapper<T>>(m, ("Set" + type).c_str())
+        .def(py::init<>())
+        .def(py::init<const std::set<T>&>())
+        .def("size", &SetWrapper<T>::size)
+        .def("empty", &SetWrapper<T>::empty)
+        .def("insert", &SetWrapper<T>::insert)
+        .def("erase", &SetWrapper<T>::erase)
+        .def("clear", &SetWrapper<T>::clear)
+        .def("contains", &SetWrapper<T>::contains)
+        .def("data", &SetWrapper<T>::getData)
+        .def("find", &SetWrapper<T>::find)
+        .def("__len__", &SetWrapper<T>::size)
+        .def("__iter__", [](SetWrapper<T> &s) { return py::make_iterator(s.begin(), s.end()); },
+             py::keep_alive<0, 1>());
+}
+
+template <typename Key, typename T>
+void bind_map_wrapper(py::module &m) {
+    py::class_<MapWrapper<Key, T>>(m, "Map")
+        .def(py::init<>())
+        .def(py::init<const std::map<Key, T>&>())
+        .def("size", &MapWrapper<Key, T>::size)
+        .def("empty", &MapWrapper<Key, T>::empty)
+        .def("clear", &MapWrapper<Key, T>::clear)
+        .def("insert", &MapWrapper<Key, T>::insert)
+        .def("erase", &MapWrapper<Key, T>::erase)
+        .def("at", &MapWrapper<Key, T>::at)
+        .def("contains", &MapWrapper<Key, T>::contains)
+        .def("data", &MapWrapper<Key, T>::getData)
+        .def("items", &MapWrapper<Key, T>::items)
+        .def("find", &MapWrapper<Key, T>::find)
+        .def("__len__", &MapWrapper<Key, T>::size)
+        .def("__setitem__", &MapWrapper<Key, T>::setItem)
+        .def("__getitem__", &MapWrapper<Key, T>::getItem)
+        .def("__delitem__", &MapWrapper<Key, T>::deleteItem)
+        .def("__contains__", &MapWrapper<Key, T>::contains)
+        .def("__iter__", [](MapWrapper<Key, T> &m) { return py::make_iterator(m.begin(), m.end()); },
+             py::keep_alive<0, 1>());
+}
+
+template <typename Key, typename T>
+void bind_map(py::module &m, const std::string &key_type, const std::string &value_type) {
+    py::class_<MapWrapper<Key, T>>(m, ("Map" + key_type + value_type).c_str())
+        .def(py::init<>())
+        .def(py::init<const std::map<Key, T>&>())
+        .def("size", &MapWrapper<Key, T>::size)
+        .def("empty", &MapWrapper<Key, T>::empty)
+        .def("clear", &MapWrapper<Key, T>::clear)
+        .def("insert", &MapWrapper<Key, T>::insert)
+        .def("erase", &MapWrapper<Key, T>::erase)
+        .def("at", &MapWrapper<Key, T>::at)
+        .def("contains", &MapWrapper<Key, T>::contains)
+        .def("data", &MapWrapper<Key, T>::getData)
+        .def("items", &MapWrapper<Key, T>::items)
+        .def("find", &MapWrapper<Key, T>::find)
+        .def("__len__", &MapWrapper<Key, T>::size)
+        .def("__setitem__", &MapWrapper<Key, T>::setItem)
+        .def("__getitem__", &MapWrapper<Key, T>::getItem)
+        .def("__delitem__", &MapWrapper<Key, T>::deleteItem)
+        .def("__contains__", &MapWrapper<Key, T>::contains)
+        .def("__iter__", [](MapWrapper<Key, T> &m) { return py::make_iterator(m.begin(), m.end()); },
+             py::keep_alive<0, 1>());
+}
+
+template <typename T>
+void bind_unordered_set_wrapper(py::module& m) {
+    using Wrapper = UnorderedSetWrapper<T>;
+    std::string class_name = "UnorderedSet";
+
+    py::class_<Wrapper>(m, class_name.c_str())
+        .def(py::init<>())
+        .def(py::init<const typename Wrapper::SetType&>())
+        .def("size", &Wrapper::size)
+        .def("max_size", &Wrapper::max_size)
+        .def("empty", &Wrapper::empty)
+        .def("clear", &Wrapper::clear)
+        .def("insert", &Wrapper::insert)
+        .def("erase", &Wrapper::erase)
+        .def("count", &Wrapper::count)
+        .def("contains", &Wrapper::contains)
+        .def("bucket_count", &Wrapper::bucket_count)
+        .def("bucket_size", &Wrapper::bucket_size)
+        .def("bucket", &Wrapper::bucket)
+        .def("load_factor", &Wrapper::load_factor)
+        .def("max_load_factor", &Wrapper::max_load_factor)
+        .def("rehash", &Wrapper::rehash)
+        .def("reserve", &Wrapper::reserve)
+        .def("to_list", &Wrapper::to_list)
+        .def("find", &Wrapper::find)
+        .def("__iter__", [](Wrapper &s) { return py::make_iterator(s.begin(), s.end()); }, py::keep_alive<0, 1>())
+        .def("__len__", &Wrapper::size);
+}
+
+template <typename T>
+void bind_unordered_set(py::module& m, const std::string& type) {
+    using Wrapper = UnorderedSetWrapper<T>;
+    std::string class_name = "UnorderedSet" + type;
+
+    py::class_<Wrapper>(m, class_name.c_str())
+        .def(py::init<>())
+        .def(py::init<const typename Wrapper::SetType&>())
+        .def("size", &Wrapper::size)
+        .def("max_size", &Wrapper::max_size)
+        .def("empty", &Wrapper::empty)
+        .def("clear", &Wrapper::clear)
+        .def("insert", &Wrapper::insert)
+        .def("erase", &Wrapper::erase)
+        .def("count", &Wrapper::count)
+        .def("contains", &Wrapper::contains)
+        .def("bucket_count", &Wrapper::bucket_count)
+        .def("bucket_size", &Wrapper::bucket_size)
+        .def("bucket", &Wrapper::bucket)
+        .def("load_factor", &Wrapper::load_factor)
+        .def("max_load_factor", &Wrapper::max_load_factor)
+        .def("rehash", &Wrapper::rehash)
+        .def("reserve", &Wrapper::reserve)
+        .def("to_list", &Wrapper::to_list)
+        .def("find", &Wrapper::find)
+        .def("__iter__", [](Wrapper &s) { return py::make_iterator(s.begin(), s.end()); }, py::keep_alive<0, 1>())
+        .def("__len__", &Wrapper::size);
+}
+
+template <typename Key, typename T>
+void bind_unordered_map(py::module& m, const std::string& key_type, const std::string& value_type) {
+    py::class_<UnorderedMapWrapper<Key, T>>(m, ("UnorderedMap" + key_type + value_type).c_str())
+        .def(py::init<>())
+        .def("at", &UnorderedMapWrapper<Key, T>::at)
+        .def("__getitem__", &UnorderedMapWrapper<Key, T>::operator[])
+        .def("insert", &UnorderedMapWrapper<Key, T>::insert)
+        .def("erase", &UnorderedMapWrapper<Key, T>::erase)
+        .def("clear", &UnorderedMapWrapper<Key, T>::clear)
+        .def("contains", &UnorderedMapWrapper<Key, T>::contains)
+        .def("find", &UnorderedMapWrapper<Key, T>::find)
+        .def("bucket_count", &UnorderedMapWrapper<Key, T>::bucket_count)
+        .def("bucket_size", &UnorderedMapWrapper<Key, T>::bucket_size)
+        .def("bucket", &UnorderedMapWrapper<Key, T>::bucket)
+        .def("load_factor", &UnorderedMapWrapper<Key, T>::load_factor)
+        .def("max_load_factor", &UnorderedMapWrapper<Key, T>::max_load_factor)
+        .def("rehash", &UnorderedMapWrapper<Key, T>::rehash)
+        .def("reserve", &UnorderedMapWrapper<Key, T>::reserve)
+        .def("data", &UnorderedMapWrapper<Key, T>::getData)
+        .def("__len__", &UnorderedMapWrapper<Key, T>::size)
+        .def("__setitem__", &UnorderedMapWrapper<Key, T>::setItem)
+        .def("__getitem__", &UnorderedMapWrapper<Key, T>::getItem)
+        .def("__delitem__", &UnorderedMapWrapper<Key, T>::deleteItem)
+        .def("__contains__", &UnorderedMapWrapper<Key, T>::contains)
+        .def("__iter__", [](UnorderedMapWrapper<Key, T> &m) { return py::make_iterator(m.begin(), m.end()); },
+             py::keep_alive<0, 1>());
 }
 
 template <typename T>

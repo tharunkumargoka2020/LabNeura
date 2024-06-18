@@ -10,6 +10,8 @@ class TestForwardListWrapper(unittest.TestCase):
         fwd_list.push_front(1)
         fwd_list.push_front("hello")
         fwd_list.push_front(3.5)
+        self.assertEqual(fwd_list.find(1),2)
+        self.assertEqual(fwd_list.find(0),-1)
         self.assertFalse(fwd_list.empty())
         self.assertEqual(fwd_list.front(), 3.5)
 
@@ -28,6 +30,8 @@ class TestForwardListWrapper(unittest.TestCase):
         fwd_list_str.push_front("apple")
         fwd_list_str.push_front("banana")
         fwd_list_str.push_front("cherry")
+        self.assertEqual(fwd_list_str.find("banana"),1)
+        self.assertEqual(fwd_list_str.find("tharun"), -1)
         self.assertFalse(fwd_list_str.empty())
         self.assertEqual(fwd_list_str.front(), "cherry")
 

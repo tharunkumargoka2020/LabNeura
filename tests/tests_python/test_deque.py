@@ -10,6 +10,8 @@ class TestDequeWrapper(unittest.TestCase):
         deque.push_back(1)
         deque.push_back("hello")
         deque.push_back(3.5)
+        self.assertEqual(deque.find("hello"), 1)
+        self.assertEqual(deque.find("hellO"), -1)
         self.assertEqual(len(deque), 3)
         self.assertEqual(deque[0], 1)
         self.assertEqual(deque[1], "hello")
@@ -66,6 +68,8 @@ class TestDequeWrapper(unittest.TestCase):
         self.assertEqual(deque_str[2], "cherry")
         self.assertEqual(deque_str.front(), "apple")
         self.assertEqual(deque_str.back(), "cherry")
+        self.assertEqual(deque_str.find("apple"), 0)
+        self.assertEqual(deque_str.find("hellO"), -1)
 
         deque_str.push_front("orange")
         self.assertEqual(len(deque_str), 4)

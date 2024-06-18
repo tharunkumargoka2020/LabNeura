@@ -65,6 +65,15 @@ public:
         vec.erase(vec.begin() + index);
     }
 
+    ssize_t find(const T& value) const {
+        auto it = std::find(vec.begin(), vec.begin()+vec.size(), value);
+        if (it != vec.end()) {
+            return std::distance(vec.begin(), it);
+        } else {
+            return -1;
+        }
+    }
+
 
     void clear() noexcept { vec.clear(); }
     void swap(VectorWrapper<T>& other) noexcept { vec.swap(other.vec); }

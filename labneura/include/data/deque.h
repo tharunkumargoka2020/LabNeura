@@ -70,6 +70,15 @@ public:
         deque.erase(deque.begin() + index);
     }
 
+    ssize_t find(const T& value) const {
+        auto it = std::find(deque.begin(), deque.end(), value);
+        if (it != deque.end()) {
+            return std::distance(deque.begin(), it);
+        } else {
+            return -1;
+        }
+    }
+
     void clear() noexcept { deque.clear(); }
     void swap(DequeWrapper<T>& other) noexcept { deque.swap(other.deque); }
     
