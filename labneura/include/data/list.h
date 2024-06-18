@@ -58,6 +58,16 @@ public:
         list.erase(it);
     }
 
+    ssize_t find(const T& value) const {
+        auto it = std::find(list.begin(), list.end(), value);
+        if (it != list.end()) {
+            return std::distance(list.begin(), it);
+        } else {
+            return -1;
+        }
+    }
+
+
     void clear() noexcept { list.clear(); }
     void swap(ListWrapper<T>& other) noexcept { list.swap(other.list); }
 

@@ -40,6 +40,16 @@ public:
         forward_list.erase_after(it);
     }
 
+    ssize_t find(const T& value) const {
+        auto it = std::find(forward_list.begin(), forward_list.end(), value);
+        if (it != forward_list.end()) {
+            return std::distance(forward_list.begin(), it);
+        } else {
+            return -1;
+        }
+    }
+
+
     // Iterators
     typename std::forward_list<T>::iterator begin() noexcept { return forward_list.begin(); }
     typename std::forward_list<T>::const_iterator begin() const noexcept { return forward_list.begin(); }

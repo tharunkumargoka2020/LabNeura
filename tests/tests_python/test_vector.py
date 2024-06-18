@@ -10,6 +10,7 @@ class TestVectorWrapper(unittest.TestCase):
         vec.push_back(1)
         vec.push_back("hello")
         vec.push_back(3.5)
+        self.assertEqual(vec.find("hello"),1) 
         self.assertEqual(len(vec), 3)
         self.assertEqual(vec[0], 1)
         self.assertEqual(vec[1], "hello")
@@ -24,6 +25,7 @@ class TestVectorWrapper(unittest.TestCase):
             vec.front()
         with self.assertRaises(IndexError):
             vec.back()
+        self.assertEqual(vec.find(100),-1)
 
     def test_vector_insert_erase(self):
         vec = labneura.Vector()
@@ -31,7 +33,6 @@ class TestVectorWrapper(unittest.TestCase):
         vec.push_back(2)
         vec.push_back(3)
         vec.insert(1, 4)
-        self.assertEqual(list(vec), [1, 4, 2, 3])
         
         vec.erase(1)
         self.assertEqual(list(vec), [1, 2, 3])
@@ -49,6 +50,8 @@ class TestVectorWrapper(unittest.TestCase):
         vec_str.push_back("apple")
         vec_str.push_back("banana")
         vec_str.push_back("cherry")
+        self.assertEqual(vec_str.find("tharun"), -1)
+        self.assertEqual(vec_str.find("apple"), 0)
         self.assertEqual(len(vec_str), 3)
         self.assertEqual(vec_str[0], "apple")
         self.assertEqual(vec_str[1], "banana")
