@@ -19,7 +19,7 @@ def check_and_install_torch():
         print("torch is already installed.")
     except ImportError:
         print("Installing torch...")
-        install_package(torch)
+        install_package('torch')
 
 def install_openmp():
     platform = sys.platform
