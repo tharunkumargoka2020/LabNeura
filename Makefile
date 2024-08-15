@@ -28,7 +28,7 @@ build:
 # Install the Python package
 install:
 	@echo "Installing Python package..."
-	pip3 install $(PYTHON_DIR)
+	cd $(PYTHON_DIR) && python setup.py install
 
 # Run C++ tests
 cpp_test: build

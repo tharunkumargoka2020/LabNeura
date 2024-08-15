@@ -5,6 +5,9 @@ import setuptools
 from setuptools import setup, Extension
 from setuptools.command.build_ext import build_ext
 
+def pre_install_script():
+    subprocess.check_call(["python", "install_deps.py"])
+
 class CMakeExtension(Extension):
     def __init__(self, name, sourcedir=''):
         super().__init__(name, sources=[])
@@ -13,6 +16,7 @@ class CMakeExtension(Extension):
 class CMakeBuild(build_ext):
     def run(self):
         try:
+            pre_install_script()
             out = subprocess.check_output(['cmake', '--version'])
         except OSError:
             raise RuntimeError("CMake must be installed to build the following extensions: " + ", ".join(e.name for e in self.extensions))
@@ -35,12 +39,14 @@ class CMakeBuild(build_ext):
 
 setup(
     name='labneura',
-    version='0.0.10',
+    version='0.0.11',
     author='Tharun Kumar Goka',
     author_email='tharunkumargoka2020@gmail.com',
     description='Python package for ML and EDA functionalities with C++ backend',
     ext_modules=[CMakeExtension('cpp', sourcedir='labneura')],
-    cmdclass=dict(build_ext=CMakeBuild),
+    cmdclass={
+        'build_ext': CMakeBuild
+    },
     packages=setuptools.find_packages(),
     zip_safe=False,
 )

@@ -1,17 +1,49 @@
 cmake_minimum_required(VERSION 3.12)
 project(labneura)
 
-set(CMAKE_CXX_COMPILER /opt/homebrew/opt/llvm/bin/clang++)
+# Check if we're on macOS and using Apple M1
+if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
+    if (CMAKE_SYSTEM_PROCESSOR MATCHES "arm64")
+        # Check if LLVM Clang++ exists
+        if (EXISTS "/opt/homebrew/opt/llvm/bin/clang++")
+            set(CMAKE_CXX_COMPILER "/opt/homebrew/opt/llvm/bin/clang++")
+        else()
+            message(FATAL_ERROR "LLVM Clang++ not found. Please install it via Homebrew.")
+        endif()
+        if (EXISTS "/opt/homebrew/opt/libomp")
+            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Xpreprocessor -fopenmp -lomp -I/opt/homebrew/opt/libomp/include -L/opt/homebrew/opt/libomp/lib")
+            set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Xpreprocessor -fopenmp -lomp -I/opt/homebrew/opt/libomp/include -L/opt/homebrew/opt/libomp/lib")
+        else()
+            message(FATAL_ERROR "OpenMP not found. Please install OpenMP on your system.")
+        endif()
+    else()
+        message(FATAL_ERROR "Unsupported architecture on macOS. Only Apple M1 is supported.")
+    endif()
+endif()
 set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Xpreprocessor -fopenmp -lomp -I/opt/homebrew/opt/libomp/include -L/opt/homebrew/opt/libomp/lib")
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Xpreprocessor -fopenmp -lomp -I/opt/homebrew/opt/libomp/include -L/opt/homebrew/opt/libomp/lib")
 
-# Add pybind11
-find_package(pybind11 REQUIRED)
+# Check for pybind11
+find_package(pybind11 QUIET)
+if (NOT pybind11_FOUND)
+    message(STATUS "pybind11 not found, attempting to install...")
+    execute_process(COMMAND ${CMAKE_COMMAND} -E chdir ${CMAKE_BINARY_DIR} ${CMAKE_COMMAND} -P "${CMAKE_SOURCE_DIR}/cmake/InstallPybind11.cmake")
+    find_package(pybind11 REQUIRED)
+else()
+    message(STATUS "pybind11 found")
+endif()
 
-# Add Eigen3
-find_package(Eigen3 REQUIRED)
-include_directories(${EIGEN3_INCLUDE_DIR})
+# Check for Eigen3
+find_package(Eigen3 QUIET)
+if (NOT Eigen3_FOUND)
+    message(STATUS "Eigen3 not found, attempting to install...")
+    execute_process(COMMAND ${CMAKE_COMMAND} -E chdir ${CMAKE_BINARY_DIR} ${CMAKE_COMMAND} -P "${CMAKE_SOURCE_DIR}/cmake/InstallEigen3.cmake")
+    find_package(Eigen3 REQUIRED)
+else()
+    message(STATUS "Eigen3 found")
+endif()
+
+# Include directories
+include_directories(${EIGEN3_INCLUDE_DIR} ${PYBIND11_INCLUDE_DIR})
 
 # Add OpenMP support
 find_package(OpenMP REQUIRED)
