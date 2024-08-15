@@ -13,6 +13,14 @@ def check_and_install_pybind11():
         print("Installing pybind11...")
         install_package('pybind11')
 
+def check_and_install_torch():
+    try:
+        import torch
+        print("torch is already installed.")
+    except ImportError:
+        print("Installing torch...")
+        install_package(torch)
+
 def install_openmp():
     platform = sys.platform
     if platform == "darwin":
@@ -58,6 +66,7 @@ def main():
     check_and_install_pybind11()
     install_openmp()
     install_eigen()
+    check_and_install_torch()
 
 if __name__ == "__main__":
     main()

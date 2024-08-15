@@ -1,5 +1,6 @@
 #include "ml/linear_regression.h"
 #include <iostream>
+#include <torch/torch.h>
 
 LinearRegression::LinearRegression(double learning_rate, int iterations)
     : learning_rate(learning_rate), iterations(iterations), bias(0) {}
