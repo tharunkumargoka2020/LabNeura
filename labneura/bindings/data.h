@@ -10,9 +10,21 @@
 #include "data/set.h"
 #include "data/map.h"
 #include "data/unordered_set.h"
+#include "data/tensor.h"
 #include "data/unordered_map.h"
 
 namespace py = pybind11;
+
+template<typename T>
+void bind_tensor(py::module& m, const std::string& suffix) {
+    py::class_<Tensor<T>>(m, ("Tensor" + suffix).c_str())
+        .def(py::init<>())
+        .def(py::init<int, int>())
+        .def(py::init<const std::vector<std::vector<T>>&>())
+        .def("print", &Tensor<T>::print)
+        .def("__add__", &Tensor<T>::operator+)
+        .def("dot", &Tensor<T>::dot);
+}
 
 template <typename T>
 void bind_vector_wrapper(py::module &m) {
