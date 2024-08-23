@@ -6,7 +6,7 @@ from setuptools import setup, Extension
 from setuptools.command.build_ext import build_ext
 
 def pre_install_script():
-    subprocess.check_call(["python", "install_deps.py"])
+    subprocess.check_call(["python3", "install_deps.py"])
 
 class CMakeExtension(Extension):
     def __init__(self, name, sourcedir=''):
@@ -49,4 +49,8 @@ setup(
     },
     packages=setuptools.find_packages(),
     zip_safe=False,
+    install_requires=[
+        'pybind11',
+        'torch'
+    ]
 )

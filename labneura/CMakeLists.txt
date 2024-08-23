@@ -27,11 +27,15 @@ execute_process(
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
-set(Torch_DIR "${PYTHON_SITE_PACKAGES}/torch/share/cmake/Torch")
-
+if(APPLE)
+    set(CMAKE_SHARED_LINKER_FLAGS "-undefined dynamic_lookup")
+endif()
 find_package(pybind11 REQUIRED)
 find_package(Eigen3 REQUIRED)
+#set(Torch_DIR "${PYTHON_SITE_PACKAGES}/torch/share/cmake/Torch")
+set(Torch_DIR "/Users/gtk/GTK/LabNeura/libtorch/share/cmake/Torch")
 find_package(Torch REQUIRED)
+include_directories(${TORCH_INCLUDE_DIRS})
 
 # Include directories
 include_directories(${EIGEN3_INCLUDE_DIR} ${PYBIND11_INCLUDE_DIR})
@@ -46,13 +50,14 @@ endif()
 
 # Include directories
 include_directories(include)
-include_directories(${Python3_INCLUDE_DIRS})
 
 # Add library for Algorithms
 add_library(labneura MODULE bindings/interface.cpp 
     src/algorithms/sorting.cpp 
     src/algorithms/graph.cpp 
-    src/ml/linear_regression.cpp)
+    src/ml/linear_regression.cpp
+    src/ml/gpt2.cpp)
+target_include_directories(labneura PRIVATE ${TORCH_INCLUDE_DIRS})
 target_link_libraries(labneura PRIVATE pybind11::module OpenMP::OpenMP_CXX Eigen3::Eigen ${TORCH_LIBRARIES})
 set_target_properties(labneura PROPERTIES PREFIX "${PYTHON_MODULE_PREFIX}" SUFFIX "${PYTHON_MODULE_EXTENSION}")
 set_property(TARGET labneura PROPERTY CXX_STANDARD 17)

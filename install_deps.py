@@ -9,7 +9,7 @@ def check_and_install_pybind11():
     try:
         import pybind11
         print("pybind11 is already installed.")
-    except ImportError:
+    except Exception:
         print("Installing pybind11...")
         install_package('pybind11')
 
@@ -17,7 +17,7 @@ def check_and_install_torch():
     try:
         import torch
         print("torch is already installed.")
-    except ImportError:
+    except Exception:
         print("Installing torch...")
         install_package('torch')
 
@@ -66,7 +66,7 @@ def main():
     check_and_install_pybind11()
     install_openmp()
     install_eigen()
-    check_and_install_torch()
+    # check_and_install_torch()
 
 if __name__ == "__main__":
     main()

@@ -10,6 +10,7 @@ namespace py = pybind11;
 
 PYBIND11_MODULE(labneura, m) {
     bind_linear_regression(m);
+    bind_gpt2(m);
     bind_sorting(m);
     bind_graph(m);
     bind_avl<int, int>(m, "Int", "Int");
