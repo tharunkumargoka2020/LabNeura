@@ -5,9 +5,6 @@ import setuptools
 from setuptools import setup, Extension
 from setuptools.command.build_ext import build_ext
 
-def pre_install_script():
-    subprocess.check_call(["python3", "install_deps.py"])
-
 class CMakeExtension(Extension):
     def __init__(self, name, sourcedir=''):
         super().__init__(name, sources=[])
@@ -16,7 +13,6 @@ class CMakeExtension(Extension):
 class CMakeBuild(build_ext):
     def run(self):
         try:
-            pre_install_script()
             out = subprocess.check_output(['cmake', '--version'])
         except OSError:
             raise RuntimeError("CMake must be installed to build the following extensions: " + ", ".join(e.name for e in self.extensions))
@@ -51,6 +47,5 @@ setup(
     zip_safe=False,
     install_requires=[
         'pybind11',
-        'torch'
     ]
 )

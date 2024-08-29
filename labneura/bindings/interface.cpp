@@ -4,15 +4,13 @@
 #include <vector>
 #include "data.h"
 #include "algorithms.h"
-#include "ml.h"
 
 namespace py = pybind11;
 
 PYBIND11_MODULE(labneura, m) {
-    bind_linear_regression(m);
-    bind_gpt2(m);
     bind_sorting(m);
     bind_graph(m);
+    bind_tensor(m);
     bind_avl<int, int>(m, "Int", "Int");
     bind_avl<int, float>(m, "Int", "Float");
     bind_avl<int, double>(m, "Int", "Double");
@@ -33,8 +31,6 @@ PYBIND11_MODULE(labneura, m) {
     bind_avl<std::string, double>(m, "String", "Double");
     bind_avl<std::string, std::string>(m, "String", "String");
 
-    bind_tensor<float>(m, "Float");
-    // bind_tensor<double>(m, "Double");
     bind_vector_wrapper<py::object>(m);
     bind_vector<int>(m, "Int");
     bind_vector<float>(m, "Float");
