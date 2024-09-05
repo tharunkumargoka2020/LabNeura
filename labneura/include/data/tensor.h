@@ -1,28 +1,40 @@
 #pragma once
 
 #include <torch/torch.h>
+#include <ATen/ATen.h>
+#include <pybind11/pybind11.h>
 #include <pybind11/numpy.h>
+#include <vector>
 
-class CustomTensor {
+namespace py = pybind11;
+
+class Tensor {
 public:
-    // Constructors to handle different input types
-    CustomTensor(const std::vector<float>& data);
-    CustomTensor(const std::vector<int>& data);
-    CustomTensor(const at::Tensor& tensor);
-    CustomTensor(const pybind11::array& numpy_array);
+    // Constructors
+    Tensor();
+    Tensor(const py::array& numpy_array);
+    Tensor(const std::vector<float>& list);
+    Tensor(const at::Tensor& torch_tensor);
 
-    // Get the underlying tensor
+    // Convert Python objects to torch::Tensor
+    at::Tensor from_numpy(const py::array& numpy_array);
+    at::Tensor from_list(const std::vector<float>& list);
+    at::Tensor from_pytorch_tensor(const at::Tensor& tensor);
+
+    // Tensor operations
+    Tensor add(const Tensor& other) const;
+    Tensor multiply(const Tensor& other) const;
+
+    // Return the internal tensor
     at::Tensor getTensor() const;
 
+    // Helper function to detect available device and allocate tensor accordingly
+    bool is_cuda_available() const;
+    bool is_rocm_available() const;
+    bool is_metal_available() const;
+
+    at::Device get_device() const;
+
 private:
-    // Device-aware tensor storage
     at::Tensor tensor_;
-
-    // Helper method to determine the best device (CUDA, HIP, or CPU)
-    at::Device getBestDevice() const;
-
-    // Helper method to convert different inputs to torch::Tensor
-    at::Tensor convertToTensor(const std::vector<float>& data) const;
-    at::Tensor convertToTensor(const std::vector<int>& data) const;
-    at::Tensor convertToTensor(const pybind11::array& numpy_array) const;
 };

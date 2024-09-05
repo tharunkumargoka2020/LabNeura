@@ -16,12 +16,24 @@
 namespace py = pybind11;
 
 void bind_tensor(py::module& m) {
-    py::class_<CustomTensor>(m, "Tensor")
-        .def(py::init<const std::vector<float>&>())
-        .def(py::init<const std::vector<int>&>())
-        .def(py::init<const torch::Tensor&>())
-        .def(py::init<const py::array&>())
-        .def("getTensor", &CustomTensor::getTensor);
+    py::class_<Tensor>(m, "Tensor")
+        .def(py::init<>())  // Default constructor
+        .def(py::init<const py::array&>())  // Numpy array constructor
+        .def(py::init<const std::vector<float>&>())  // List constructor
+        .def(py::init<const at::Tensor&>())  // PyTorch tensor constructor
+        
+        // Methods
+        .def("get_tensor", &Tensor::getTensor)
+        .def("add", &Tensor::add)
+        .def("multiply", &Tensor::multiply)
+        .def("is_cuda_available", &Tensor::is_cuda_available)
+        .def("is_rocm_available", &Tensor::is_rocm_available)
+        .def("is_metal_available", &Tensor::is_metal_available)
+        
+        // Static methods for convenience
+        .def("from_numpy", &Tensor::from_numpy)
+        .def("from_list", &Tensor::from_list)
+        .def("from_pytorch_tensor", &Tensor::from_pytorch_tensor);
 }
 
 

@@ -1,62 +1,81 @@
 #include "data/tensor.h"
 
-// Constructor from std::vector<float>
-CustomTensor::CustomTensor(const std::vector<float>& data) 
-    : tensor_(convertToTensor(data).to(getBestDevice())) {}
-
-// Constructor from std::vector<int>
-CustomTensor::CustomTensor(const std::vector<int>& data)
-    : tensor_(convertToTensor(data).to(getBestDevice())) {}
-
-// Constructor from at::Tensor
-CustomTensor::CustomTensor(const at::Tensor& tensor)
-    : tensor_(tensor.to(getBestDevice())) {}
+// Default constructor, initializes to an empty tensor on the appropriate device
+Tensor::Tensor() {
+    tensor_ = at::empty({0}, get_device());
+}
 
 // Constructor from numpy array
-CustomTensor::CustomTensor(const pybind11::array& numpy_array)
-    : tensor_(convertToTensor(numpy_array).to(getBestDevice())) {}
+Tensor::Tensor(const py::array& numpy_array) {
+    tensor_ = from_numpy(numpy_array);
+}
 
-// Get the underlying tensor
-at::Tensor CustomTensor::getTensor() const {
+// Constructor from list
+Tensor::Tensor(const std::vector<float>& list) {
+    tensor_ = from_list(list);
+}
+
+// Constructor from PyTorch tensor
+Tensor::Tensor(const at::Tensor& torch_tensor) : tensor_(torch_tensor) {}
+
+// Convert numpy array to torch tensor
+at::Tensor Tensor::from_numpy(const py::array& numpy_array) {
+    py::buffer_info buf_info = numpy_array.request();
+    std::vector<int64_t> shape(buf_info.shape.begin(), buf_info.shape.end());
+    return torch::from_blob(buf_info.ptr, shape, torch::kFloat).to(get_device()).clone();
+}
+
+// Convert list to torch tensor
+at::Tensor Tensor::from_list(const std::vector<float>& list) {
+    return torch::tensor(list, torch::kFloat).to(get_device());
+}
+
+// Convert tensor to torch tensor
+at::Tensor Tensor::from_pytorch_tensor(const at::Tensor& tensor) {
+    // Store the tensor in the appropriate device
+    return tensor.to(get_device());
+}
+
+// Return the internal tensor
+at::Tensor Tensor::getTensor() const {
     return tensor_;
 }
 
-// Determine the best device
-at::Device CustomTensor::getBestDevice() const {
-    if (torch::cuda::is_available()) {
+// Addition of two tensors
+Tensor Tensor::add(const Tensor& other) const {
+    return Tensor(tensor_ + other.tensor_);
+}
+
+// Multiplication of two tensors
+Tensor Tensor::multiply(const Tensor& other) const {
+    return Tensor(tensor_ * other.tensor_);
+}
+
+// Check if CUDA is available
+bool Tensor::is_cuda_available() const {
+    return torch::cuda::is_available();
+}
+
+// Check if ROCm is available
+bool Tensor::is_rocm_available() const {
+    // PyTorch usually treats ROCm as a CUDA device, so this check works for ROCm as well
+    return torch::cuda::is_available();
+}
+
+// Check if Metal (Apple's GPU API) is available
+bool Tensor::is_metal_available() const {
+    return at::hasMPS();
+}
+
+// Helper function to get the appropriate device (CUDA, ROCm, Metal, or CPU)
+at::Device Tensor::get_device() const {
+    if (is_cuda_available()) {
         return at::Device(at::kCUDA);
-    } else if (torch::hasHIP()) {
+    } else if (is_rocm_available()) {
         return at::Device(at::kHIP);
+    } else if (is_metal_available()) {
+        return at::Device(at::kMPS);
     } else {
-        return at::Device(at::kCPU);
+        return at::Device(at::kCPU);  // Default to CPU (works for both Intel and AMD CPUs)
     }
-}
-
-// Convert std::vector<float> to at::Tensor
-at::Tensor CustomTensor::convertToTensor(const std::vector<float>& data) const {
-    return torch::tensor(data);
-}
-
-// Convert std::vector<int> to at::Tensor
-at::Tensor CustomTensor::convertToTensor(const std::vector<int>& data) const {
-    return torch::tensor(data);
-}
-
-// Convert numpy array to at::Tensor
-at::Tensor CustomTensor::convertToTensor(const pybind11::array& numpy_array) const {
-    // Request buffer information from the numpy array
-    pybind11::buffer_info buf_info = numpy_array.request();
-
-    // Check if the data type is float (assuming that's the tensor type you want)
-    if (buf_info.format != pybind11::format_descriptor<float>::format()) {
-        throw std::runtime_error("Expected numpy array of type float.");
-    }
-
-    // Convert shape to vector<int64_t> for PyTorch tensor creation
-    std::vector<int64_t> shape(buf_info.shape.size());
-    std::transform(buf_info.shape.begin(), buf_info.shape.end(), shape.begin(),
-                   [](const std::size_t dim) { return static_cast<int64_t>(dim); });
-
-    // Create the tensor using the data pointer from the numpy array
-    return torch::from_blob(static_cast<float*>(buf_info.ptr), shape, torch::kFloat).clone();
 }
